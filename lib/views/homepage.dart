@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:shop/controllers/productcontroller.dart';
-import 'package:shop/models/product.dart';
+
 import 'package:shop/views/product_tile.dart';
 
 // ignore: use_key_in_widget_constructors
@@ -48,17 +48,21 @@ class HomePage extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Obx(
-            () => StaggeredGridView.countBuilder(
-                itemCount: productController.productList.length,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                crossAxisCount: 2,
-                itemBuilder: (context, index) {
-                  return ProductTile(productController.productList[index]);
-                },
-                staggeredTileBuilder: (index) => StaggeredTile.fit(1)),
-          ),
+          child: Obx(() {
+            if (productController.isLoading.value) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return StaggeredGridView.countBuilder(
+                  itemCount: productController.productList.length,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  crossAxisCount: 2,
+                  itemBuilder: (context, index) {
+                    return ProductTile(productController.productList[index]);
+                  },
+                  staggeredTileBuilder: (index) => StaggeredTile.fit(1));
+            }
+          }),
         )
       ]),
     );
